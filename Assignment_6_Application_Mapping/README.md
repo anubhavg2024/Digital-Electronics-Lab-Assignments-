@@ -1,5 +1,4 @@
 # A6 - Application Mapping of Sequential Building Blocks
-**CO coverage:** CO3 (primary), CO1 (reinforced)
 **Aim:** For each sequential block (flip-flop, Mod-N counter, shift
 register), identify a real system that uses it, describe its role, and show
 a small simulation.
