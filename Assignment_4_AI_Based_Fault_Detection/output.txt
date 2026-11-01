@@ -1,0 +1,11 @@
+A B Cin | golden(S,Co) | faulty(S,Co) | fixed(S,Co)
+0 0  0  |     0 0      |     0 0      |    0 0
+0 0  1  |     1 0      |     1 1      |    1 0   <-- FAULT
+0 1  0  |     1 0      |     0 0      |    1 0   <-- FAULT
+0 1  1  |     0 1      |     1 1      |    0 1   <-- FAULT
+1 0  0  |     1 0      |     1 0      |    1 0
+1 0  1  |     0 1      |     0 0      |    0 1   <-- FAULT
+1 1  0  |     0 1      |     1 1      |    0 1   <-- FAULT
+1 1  1  |     1 1      |     0 1      |    1 1   <-- FAULT
+Faulty design differs from golden in 6 of 8 rows
+PASS: fixed design matches golden for all 8 rows
