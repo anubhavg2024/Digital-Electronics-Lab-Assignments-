@@ -1,0 +1,9 @@
+ a  b |  c
+ 0  0 |  0
+ 0 15 | 15
+ 7  7 |  7
+15  0 | 15
+15 15 | 15
+PASS: all 256 combinations match
+256 rows written to expected_table.csv
+a=b rows (c equals both): [(0, 0, 0), (1, 1, 1), (2, 2, 2)] ...
