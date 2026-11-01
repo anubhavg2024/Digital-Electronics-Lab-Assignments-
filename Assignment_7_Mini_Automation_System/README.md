@@ -53,6 +53,3 @@ Testbench output matches the reference model for the 8 scenarios and for
 - Not handled: a car and a valid ticket together with X = 1 while OPEN
   (the controller ignores them until the barrier closes and reopens).
 
-## GenAI use
-The state table was derived and checked with <tool, version>. See
-`prompts/prompts.md`.
