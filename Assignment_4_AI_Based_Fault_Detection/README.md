@@ -1,5 +1,4 @@
 # A4 - AI-Based Fault Detection in Digital Circuits
-**CO coverage:** CO1, CO2
 **Aim:** Build a full adder with a deliberate fault, have GenAI diagnose the
 fault from the truth table, then correct and re-verify the circuit.
 
