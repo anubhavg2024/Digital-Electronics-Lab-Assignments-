@@ -8,9 +8,9 @@ F(A,B,C,D,E) = Σm(0,1,4,5,16,17,20,21,26,27,30,31)
 ## Files
 - `a1_simplifier.v` - original (minterm) vs simplified module + testbench
 - `crosscheck.py` - sympy SOP/POS cross-check
-- `circuit/F_original.circ`, `circuit/F_simplified.circ` - Logisim circuits
+- `circuit/compare_and_verify.md`, `circuit/k_map.md`, `circuit/simplified_ckt.png`, `circuit/truth_table.md` - Circuit, Truth_Table, K-Map, Compare & Verify 
 - `output.txt` - testbench output
-- `prompts.md` - GenAI prompt, response, verification
+- `prompts/prompt_1.md`, `prompts/prompt_2.md` - GenAI prompt, response, verification
 
 ## How to run
     iverilog -g2012 -o sim a1_simplifier.v
