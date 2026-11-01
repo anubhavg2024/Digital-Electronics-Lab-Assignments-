@@ -1,0 +1,15 @@
+time P | G Y R W
+   6  0 | 1 0 0 0
+  16  0 | 1 0 0 0
+  26  0 | 1 0 0 0
+  36  1 | 0 1 0 0      <- Yellow
+  46  0 | 0 0 1 1      <- Walk (red + walk)
+  56  0 | 0 0 1 0      <- Red
+  66  0 | 1 0 0 0      <- Green again
+  ...
+ 126  1 | 0 1 0 0
+ 136  1 | 0 0 1 1      <- P still 1, ignored
+ 146  1 | 0 0 1 0
+ 156  0 | 1 0 0 0
+  ...
+PASS: FSM matches the reference model on every clock edge
