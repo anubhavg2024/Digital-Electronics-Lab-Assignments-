@@ -1,0 +1,35 @@
+en d | q
+ 1 1 | 1  (write 1)
+ 0 0 | 1  (hold: still 1)
+ 1 0 | 0  (write 0)
+PASS: flip-flop stores and holds a bit
+a6_dff.v:37: $finish called at 46 (1s)
+tick 1: q=1 carry=0  (tens=0 units=1)
+tick 2: q=2 carry=0  (tens=0 units=2)
+tick 57: q=57 carry=0  (tens=5 units=7)
+tick 58: q=58 carry=0  (tens=5 units=8)
+tick 59: q=59 carry=1  (tens=5 units=9)
+tick 60: q=0 carry=0  (tens=0 units=0)
+tick 61: q=1 carry=0  (tens=0 units=1)
+tick 62: q=2 carry=0  (tens=0 units=2)
+tick 117: q=57 carry=0  (tens=5 units=7)
+tick 118: q=58 carry=0  (tens=5 units=8)
+tick 119: q=59 carry=1  (tens=5 units=9)
+tick 120: q=0 carry=0  (tens=0 units=0)
+tick 121: q=1 carry=0  (tens=0 units=1)
+tick 122: q=2 carry=0  (tens=0 units=2)
+PASS: wraps 59 -> 0 every 60 ticks; BCD version matches
+a6_mod60.v:44: $finish called at 1256 (1s)
+t=6 sout=0 rx=00000000
+t=16 sout=0 rx=00000000
+t=26 sout=1 rx=00000000
+t=36 sout=0 rx=00000001
+t=46 sout=1 rx=00000010
+t=56 sout=0 rx=00000101
+t=66 sout=0 rx=00001010
+t=76 sout=1 rx=00010100
+t=86 sout=0 rx=00101001
+t=96 sout=1 rx=01010010
+t=106 sout=0 rx=10100101
+Sent a5, received a5 -> PASS
+a6_shift_register.v:35: $finish called at 110 (1s)
