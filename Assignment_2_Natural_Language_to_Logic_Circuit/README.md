@@ -1,5 +1,4 @@
 # A2 - Natural Language to Logic Circuit Generator
-**CO coverage:** CO2
 **Aim:** Convert an English description into a Boolean expression and
 gate-level design using GenAI, then simulate and verify it.
 
