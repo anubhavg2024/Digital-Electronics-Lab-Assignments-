@@ -1,5 +1,4 @@
 # A8 - From Code to Circuit: 4-bit Mini-ALU and Program Counter
-**CO coverage:** CO4 (primary), CO1 (reinforced)
 **Aim:** Build a 4-bit adder/subtractor ALU with a mode-select input and a
 4-bit program counter, then map lines of code onto these hardware blocks.
 
