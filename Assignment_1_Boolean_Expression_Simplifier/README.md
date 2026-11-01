@@ -1,5 +1,4 @@
 # A1 - AI-Assisted Boolean Expression Simplifier
-**CO coverage:** CO1, CO2
 **Aim:** Use GenAI to simplify a 5-variable Boolean function, then implement
 and verify the simplified circuit in a simulator.
 
