@@ -1,5 +1,4 @@
 # A3 - FSM Design for Traffic Light Controller using GenAI
-**CO coverage:** CO2, CO3
 **Aim:** Use GenAI to generate the state diagram, state table and logic
 equations for a traffic light FSM with a pedestrian request, implement it
 with flip-flops and simulate it.
