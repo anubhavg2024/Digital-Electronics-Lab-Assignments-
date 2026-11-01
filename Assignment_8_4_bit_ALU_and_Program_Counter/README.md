@@ -42,5 +42,3 @@ See `mapping/c_equals_a_plus_b.md`, `mapping/for_loop_mapping.md` and
 - The counter stops at 8 because the comparator disables it.
 - Subtraction needs the carry-in = 1, not 0.
 
-## GenAI use
-<Used for ... / Not used for this assignment.>
