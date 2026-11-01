@@ -1,5 +1,4 @@
 # A7 - Design a Mini Automation System (Parking Barrier Controller)
-**CO coverage:** CO2 (primary)
 **Aim:** Apply combinational and sequential design to a real automation
 scenario: define the I/O, derive the FSM and logic, implement it in Logisim
 and test every input scenario, including edge cases.
