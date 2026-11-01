@@ -1,5 +1,4 @@
 # A5 - Digital Clock FSM Design with GenAI
-**CO coverage:** CO2, CO3
 **Aim:** Use GenAI to derive the FSM states and flip-flop implementation of a
 24-hour digital clock, then simulate and verify seconds, minutes and hours.
 
