@@ -1,27 +1,52 @@
-# Prompt–Response Log: Design Check of the Traffic Light FSM
+# Prompt–Response Log: Design Verification of Traffic Light FSM
 
 ## Prompt
 
-Check your design for unused states and for what happens if P is pressed during Yellow or Walk. Is the encoding glitch-free?
+Check the Moore FSM traffic light controller for state assignment, pedestrian requests during Yellow, Walk, and Red Clearance, and the effect of Gray code encoding. Explain the expected behavior, recovery characteristics, and any limitations of the design.
 
 ---
 
 ## Response
 
-### 1. Unused state (11)
+### Step 1: State assignment
 
-| Present Q1 Q0 | P | D1 = Q0 | D0 = Q1′Q0′P | Next |
-|---------------|---|---------|--------------|------|
-| 11            | 0 or 1 | 1  | 0            | 10 (W) |
+All four possible two-bit combinations are assigned to valid states:
 
-State 11 goes to W, and W goes to G on the next clock, so the machine is self-correcting. It recovers in two clocks regardless of P. In state 11, Green and Yellow are both 0 (Q1′Q0′ = 0 and Q1′Q0 = 0), and Red and Walk are on, so an illegal state never shows a green or yellow light.
+| State | Q1 Q0 |
+|---|---|
+| G | 00 |
+| Y | 01 |
+| W | 11 |
+| R | 10 |
 
-This holds only because the don't-cares (X) in the K-maps were chosen so that they lead back to a legal state. It was verified above rather than assumed.
+Therefore, there are no unused state encodings.
 
-### 2. P pressed during Yellow or Walk
+### Step 2: Pedestrian request during different states
 
-D1 and D0 do not depend on P in states Y and W, so P is ignored there:
+- **During Green:** P is checked. If P = 1, the controller transitions to Yellow.
+- **During Yellow:** P is ignored because the controller is already proceeding to the Walk phase.
+- **During Walk:** P is ignored. A new request is not stored.
+- **During Red Clearance:** P is ignored. The controller returns to Green.
 
-- **P during Y:** no effect. The machine was already heading to W, so the request is being served anyway.
-- **P during W:** the request is lost. There is no memory of it, so a pedestrian who presses during Walk must press again once the light is Green.
-- **P held high through the whole cycle:** W returns to G, and G sees P = 1 on the next clock and goes straight to Y. Green lasts one clock cycle, so there is no minimum green time. If that matters, add a green-time counter or a request latch (set by P, cleared when W ends) and a
+### Step 3: Gray code encoding
+
+The state sequence is:
+
+The state sequence is:
+
+(00 --> 01 --> 11 --> 10 --> 00)
+
+Only one flip-flop output changes during each normal transition. This reduces the possibility of transition-related glitches in the state bits.
+
+### Step 4: Additional observations and limitations
+
+- Reset initializes the controller to Green.
+- Each state lasts for one clock cycle in the basic design.
+- A pedestrian request made during Walk or Red Clearance is not remembered.
+- If P remains high, the controller can return to Yellow immediately after entering Green.
+- A request latch could be added to retain pedestrian requests.
+- A timing mechanism could be added to enforce minimum signal durations.
+
+### Conclusion
+
+The FSM follows the required traffic light sequence. Its state transitions and output equations are consistent with the specified behavior. The design can be implemented using two D flip-flops and combinational logic gates.
