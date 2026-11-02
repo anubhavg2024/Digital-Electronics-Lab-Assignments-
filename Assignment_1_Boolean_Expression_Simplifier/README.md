@@ -6,9 +6,8 @@ and verify the simplified circuit in a simulator.
 F(A,B,C,D,E) = Σm(0,1,4,5,16,17,20,21,26,27,30,31)
 
 ## Files
-- `circuit/compare_and_verify.md`, `circuit/k_map.md`, `circuit/simplified_ckt.png`, `circuit/truth_table.md` - Circuit, Truth_Table, K-Map, Compare & Verify 
-- `output.txt` - testbench output
-- `prompts/prompt_1.md`, `prompts/prompt_2.md` - GenAI prompt, response, verification
+- `circuit/` – Contains the circuit image or design, discussion, verification details, and truth table, as applicable to the assignment.
+- `prompts/` – Contains the GenAI prompt and response log, including the prompts used, AI-generated responses, and verification or review of the results.
 
 ## K-map (rows = BC, columns = DE, both in Gray-code order)
 A = 0
