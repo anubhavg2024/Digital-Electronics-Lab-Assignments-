@@ -21,7 +21,7 @@ Convert an English description into a Boolean expression and gate-level circuit 
 ## Boolean Expression
 
 \[
-\F = D_open . (A+S) 
+F = D_open . (A+S) 
 \]
 
 The alarm activates when the door is open and the system is armed, or whenever smoke is detected.
