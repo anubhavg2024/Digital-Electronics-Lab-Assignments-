@@ -12,7 +12,7 @@ F(A,B,C,D,E)= Sigma m(0,1,4,5,16,17,20,21,26,27,30,31)
 The simplified expression is:
 
 \[
-\F=B'D'+ABD
+F=B'D'+ABD
 \]
 
 ## Observations
