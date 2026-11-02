@@ -49,5 +49,20 @@ Groups:
 - C and E are redundant inputs.
 - All 32 input combinations were checked in Logisim, including the corner cases 00000 and 11111.
 
-## GenAI use
-Claude Sonnet 5.5, a large language model developed by Anthropic, accessed through the claude.ai chat interface.
+
+## GenAI Usage
+
+**GenAI Tool Used:** Claude Sonnet 5.5, a large language model developed by Anthropic, accessed through the Claude.ai chat interface.
+
+Generative AI was used to assist with:
+
+- Understanding and interpreting the assignment requirements.
+- Developing the logical or circuit design approach.
+- Deriving Boolean expressions and related logic.
+- Preparing truth tables and design documentation.
+- Identifying appropriate logic gates and components.
+- Explaining circuit operation, verification, and edge cases.
+- Reviewing the design for logical consistency.
+
+The AI-generated suggestions and outputs were reviewed and checked against the assignment requirements. Final design decisions and verification were based on the expected circuit behavior.
+
