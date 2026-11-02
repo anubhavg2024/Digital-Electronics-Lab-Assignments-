@@ -1,2 +1,0 @@
-iverilog -g2012 -o sim a1_simplifier.v
-vvp sim > output.txt
