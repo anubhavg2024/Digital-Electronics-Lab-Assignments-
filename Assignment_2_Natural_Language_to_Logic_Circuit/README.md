@@ -9,6 +9,11 @@ Convert an English description into a Boolean expression and gate-level circuit 
 
 "The alarm rings if the door is open and the system is armed, or if smoke is detected."
 
+## Files
+
+- `circuit/` – Contains the circuit image or design, discussion, verification details, and truth table, as applicable to the assignment.
+- `prompts/` – Contains the GenAI prompt and response log, including the prompts used, AI-generated responses, and verification or review of the results.
+
 ## Input and Output Variables
 
 | Variable | Meaning |
