@@ -8,7 +8,7 @@ Derive the FSM and flip-flop-based design for a 24-hour digital clock with secon
 
 ## Response
 
-### 1. FSM view
+### FSM view
 
 The clock is a Moore machine with no data input, and its state is the time itself:
 
@@ -19,7 +19,7 @@ The clock is a Moore machine with no data input, and its state is the time itsel
 
 Listing 86,400 states is impractical, so the machine is decomposed into three cascaded modulo counters.
 
-### 2. Flip-flops per counter
+### Flip-flops per counter
 
 | Counter | Modulus | Range | Binary FFs        | BCD FFs (for 7-segment) |
 |---------|---------|-------|-------------------|-------------------------|
@@ -30,7 +30,7 @@ Listing 86,400 states is impractical, so the machine is decomposed into three ca
 
 17 is also the theoretical minimum, since 2¹⁶ = 65,536 < 86,400 ≤ 2¹⁷ = 131,072. The binary design uses D flip-flops with synchronous clear. The BCD version is easier to display but costs 3 more flip-flops.
 
-### 3. State transitions
+### State transitions
 
 **Seconds (s):**
 
@@ -73,101 +73,24 @@ min_tc = (min == 59)
 hr_tc  = (hr  == 23)
 ```
 
-### 5. Carry/enable logic
+### Carry/enable logic
 
-All flip-flops share one clock (fully synchronous), and the carries act as enables, not as clocks:
+The architecture is fully synchronous, sharing a single master clock across all flip-flops. Carries function as enable lines rather than secondary clocks:
 
-```
-sec_en = tick            (the 1 Hz tick)
-min_en = sec_en · sec_tc
-hr_en  = min_en · min_tc
-```
+[sec_en = tick]
 
-Each counter's flip-flops update on the same clock edge, and a higher counter only changes when its enable is 1.
+[min_en = sec_en . sec_tc]
 
-Per-counter next-state equations, with qᵢ the bits, en the counter's enable and tc its terminal-count signal:
+[hr_en = min_en . min_tc]
 
-```
-clr = en · tc                                   (wrap to zero)
-Dᵢ  = ¬rst · ¬clr · (qᵢ ⊕ (en · qᵢ₋₁ · … · q₀))
-```
+Higher-order counters remain in a hold state unless their respective enable conditions evaluate to true.
 
-For bit 0 the carry term is just en, so D₀ = ¬rst · ¬clr · (q₀ ⊕ en). When en = 0 the counter holds, and when en = 1 it counts up or clears.
+### Reset condition
 
-### 6. Reset condition
+A synchronous reset signal forces all counter flip-flops to zero, immediately initializing the time to 00:00:00. Natural rollover occurs when 23:59:59 transitions on the next clock edge, simultaneously clearing all counters back to zero.
 
-**Power-on or manual reset:** rst = 1 forces all 17 flip-flops to 0, which is 00:00:00. It is synchronous and has priority over everything else.
+### Design notes
 
-**Natural wrap (no extra reset needed):** the clear happens on the tick when
+- Synchronous Execution: Utilizing an enable-chain approach instead of a ripple architecture avoids propagation delays and eliminates transient display glitches.
 
-- seconds: s = 59 → clr_s = tick · sec_tc
-- minutes: m = 59 and s = 59 → clr_m = min_en · min_tc
-- hours: h = 23, m = 59 and s = 59 → clr_h = hr_en · hr_tc
-
-So 23:59:59 followed by a tick sets all three counters to 0 in the same edge.
-
-### 7. Verilog
-
-```verilog
-module clock24 (
-    input  wire       clk,    // fast system clock
-    input  wire       rst,    // synchronous, active high -> 00:00:00
-    input  wire       tick,   // one-clock-wide pulse at 1 Hz
-    output reg  [4:0] hr,     // 0-23
-    output reg  [5:0] min,    // 0-59
-    output reg  [5:0] sec     // 0-59
-);
-
-    // Terminal counts (>= so out-of-range values also wrap)
-    wire sec_tc = (sec >= 6'd59);
-    wire min_tc = (min >= 6'd59);
-    wire hr_tc  = (hr  >= 5'd23);
-
-    // Carry/enable chain
-    wire sec_en = tick;
-    wire min_en = sec_en & sec_tc;
-    wire hr_en  = min_en & min_tc;
-
-    always @(posedge clk) begin
-        if (rst) begin
-            sec <= 6'd0;
-            min <= 6'd0;
-            hr  <= 5'd0;
-        end else begin
-            if (sec_en) sec <= sec_tc ? 6'd0 : sec + 6'd1;
-            if (min_en) min <= min_tc ? 6'd0 : min + 6'd1;
-            if (hr_en)  hr  <= hr_tc  ? 5'd0 : hr  + 5'd1;
-        end
-    end
-
-endmodule
-
-// 1 Hz tick generator from a fast clock (set CLK_HZ to your clock frequency)
-module tick_gen #(parameter integer CLK_HZ = 50_000_000) (
-    input  wire clk,
-    input  wire rst,
-    output reg  tick
-);
-    reg [$clog2(CLK_HZ)-1:0] cnt;
-    always @(posedge clk) begin
-        if (rst) begin
-            cnt  <= 0;
-            tick <= 1'b0;
-        end else if (cnt == CLK_HZ - 1) begin
-            cnt  <= 0;
-            tick <= 1'b1;
-        end else begin
-            cnt  <= cnt + 1'b1;
-            tick <= 1'b0;
-        end
-    end
-endmodule
-```
-
-If your board literally gives a 1 Hz clock, drop `tick` and use `sec_en = 1`. A tick-enable on a fast clock is usually preferred, because it avoids derived clocks and timing problems.
-
-### 8. Design notes
-
-- **Synchronous, not ripple:** a ripple design with each counter clocking the next would make minute or hour changes appear a few nanoseconds late, and decoded displays could glitch. The enable chain avoids this.
-- **Illegal states:** values such as sec = 60–63 or hr = 24–31 can only occur from a power-up or noise upset. The `>=` comparison in the Verilog sends them back into range on the next carry. If you use the shorter `==` decode with don't-cares, an out-of-range value still counts up to a pattern that matches (for example 60 → 61 → 62 → 63, where 63 matches the shortened sec_tc) and wraps, but it can run for a few extra ticks.
-- **Display glitches:** if you decode the counters to 7-segment outputs, binary-to-BCD conversion (or BCD counters) is needed. The BCD version replaces "+1" with a decade counter: the units digit wraps at 9, the tens digit wraps at 5 (minutes, seconds), and the hours wrap at 23.
+- Robust Range Handling: Terminal count detection ensures correct wrap-around behavior across all active states.
