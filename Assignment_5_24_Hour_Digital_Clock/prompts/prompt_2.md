@@ -10,7 +10,7 @@ Explain exactly what happens on the clock edge when the time goes from 23:59:59 
 
 ### Before the edge (all values settled)
 
-The registers hold hr = 23 (10111), min = 59 (111011), sec = 59 (111011), and tick = 1 for this clock cycle. With the Verilog above:
+The registers hold hr = 23 (10111), min = 59 (111011), sec = 59 (111011), and tick = 1 for this clock cycle. Based on the system logic:
 
 | Signal | Value | Why                         |
 |--------|-------|-----------------------------|
