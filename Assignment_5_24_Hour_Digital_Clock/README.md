@@ -2,14 +2,13 @@
 **Aim:** Derive the FSM and flip-flop implementation of a 24-hour digital clock using GenAI, and study the seconds, minutes, and hours counting behavior.
 
 ## Design
-
-The digital clock uses three counters that share a common clock.
+Three counters share one clock.
 
 | Counter | Range | Flip-flops | Enabled when |
-|---|---|---:|---|
-| Seconds | 0–59 (Mod-60) | 6 | Always |
-| Minutes | 0–59 (Mod-60) | 6 | Seconds = 59 |
-| Hours | 0–23 (Mod-24) | 5 | Seconds = 59 and minutes = 59 |
+|---|---|---|---|
+| Seconds | 0-59 (Mod-60) | 6 | always |
+| Minutes | 0-59 (Mod-60) | 6 | [SEC = 59] |
+| Hours | 0-23 (Mod-24) | 5 | [SEC = 59] and [MIN = 59] 
 
 At 23:59:59, all three counters wrap to 00:00:00 on the next clock edge.
 
