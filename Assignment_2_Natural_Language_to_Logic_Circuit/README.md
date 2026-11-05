@@ -11,8 +11,8 @@ Convert an English description into a Boolean expression and gate-level circuit 
 
 ## Files
 
-- `circuit/` – Contains the circuit image or design, discussion, verification details, and truth table, as applicable to the assignment.
-- `prompts/` – Contains the GenAI prompt and response log, including the prompts used, AI-generated responses, and verification or review of the results.
+- `circuit/` – Circuit design and images, truth table, verification and discussion
+- `prompts/` – GenAI prompts and responses
 
 ## Input and Output Variables
 
@@ -77,22 +77,17 @@ All 8 possible input combinations were evaluated using the Boolean expression.
 
 The calculated outputs agree with the expected behavior of the problem statement.
 
-## GenAI Usage 
+## Result
 
-GenAI used - 
-Claude Sonnet 5.5, a large language model developed by Anthropic, accessed through the claude.ai chat interface.
+The English description was successfully converted into a Boolean expression and a gate-level logic design.
 
-Generative AI was used to:
+The final expression is:
 
-- Interpret the natural-language problem statement.
-- Identify the input and output variables.
-- Derive the Boolean expression.
-- Generate the truth table.
-- Identify the required logic gates.
-- Explain circuit operation and edge cases.
-- Check the logical consistency of the expression. 
+\[
+(D_open . A)+S 
+\]
 
-The AI-generated results were reviewed to ensure that the Boolean expression and truth table correctly represent the given statement.
+The circuit uses one AND gate and one OR gate. The truth table confirms that the alarm behaves as expected for all 8 possible input combinations.
 
 ## Observations and Edge Cases
 
@@ -113,14 +108,9 @@ D_open . (A+S)
 
 This distinction is important because the two expressions produce different outputs for some input combinations.
 
-## Result
+## GenAI Usage 
+**Tool:** Claude Sonnet 5.5 (Anthropic)
 
-The English description was successfully converted into a Boolean expression and a gate-level logic design.
-
-The final expression is:
-
-\[
-(D_open . A)+S 
-\]
-
-The circuit uses one AND gate and one OR gate. The truth table confirms that the alarm behaves as expected for all 8 possible input combinations.
+- Used for understanding the requirements, design approach and documentation
+- Used to review the design and identify edge cases
+- Suggestions were checked against the requirements and tested in Logisim
