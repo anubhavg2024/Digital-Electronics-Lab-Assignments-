@@ -4,7 +4,7 @@
 ## Boolean Function
 
 \[
-F(A,B,C,D,E)=\Sigma m(0,1,4,5,16,17,20,21,26,27,30,31)
+F(A,B,C,D,E)= Σm(0,1,4,5,16,17,20,21,26,27,30,31)
 \]
 
 ## Complete Truth Table
