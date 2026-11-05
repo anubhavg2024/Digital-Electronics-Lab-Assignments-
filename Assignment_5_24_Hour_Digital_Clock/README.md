@@ -20,11 +20,8 @@ At 23:59:59, all three counters wrap to 00:00:00 on the next clock edge.
 Counting, carries and the 23:59:59 to 00:00:00 rollover were checked at preset points
 
 ## GenAI use
+**Tool:** Claude Sonnet 5.5 (Anthropic)
 
-**GenAI tool used:** Claude Sonnet 5.5, a large language model developed by Anthropic, accessed through the claude.ai chat interface.
-
-- Used to understand the assignment requirements.
-- Used to develop the design approach and the supporting logic.
-- Used to prepare the documentation and explain the circuit operation.
-- Used to review the design for consistency and to identify edge cases.
-- All suggestions were checked against the assignment requirements. Logisim verification results should be recorded only for the conditions actually simulated.
+- Used for understanding the requirements, design approach and documentation
+- Used to review the design and identify edge cases
+- Suggestions were checked against the requirements and tested in Logisim
