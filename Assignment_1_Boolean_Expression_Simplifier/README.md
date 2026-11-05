@@ -9,29 +9,6 @@ F(A,B,C,D,E) = Σm(0,1,4,5,16,17,20,21,26,27,30,31)
 - `circuit/` – Circuit design and images, truth table, verification and discussion
 - `prompts/` – GenAI prompts and responses
 
-## K-map (rows = BC, columns = DE, both in Gray-code order)
-A = 0
-
-| BC \ DE | 00 | 01 | 11 | 10 |
-|---|---|---|---|---|
-| 00 | 1 | 1 | 0 | 0 |
-| 01 | 1 | 1 | 0 | 0 |
-| 11 | 0 | 0 | 0 | 0 |
-| 10 | 0 | 0 | 0 | 0 |
-
-A = 1
-
-| BC \ DE | 00 | 01 | 11 | 10 |
-|---|---|---|---|---|
-| 00 | 1 | 1 | 0 | 0 |
-| 01 | 1 | 1 | 0 | 0 |
-| 11 | 0 | 0 | 1 | 1 |
-| 10 | 0 | 0 | 1 | 1 |
-
-Groups:
-- B'D': 8 cells (B = 0, D = 0; A, C, E vary), a 2x2 block in both maps
-- ABD: 4 cells (A = 1, B = 1, D = 1; C, E vary), a 2x2 block in the A = 1 map
-
 ## Result
 - SOP: F = B'D' + ABD
 - POS: F = (A + B')(B' + D)(B + D')
