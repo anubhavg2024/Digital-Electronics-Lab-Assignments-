@@ -53,4 +53,12 @@ The two terms also never overlap. B′D′ needs B = 0 and ABD needs B = 1, so n
 
 ### Are any variables redundant?
 
-**C and E are redundant.** They appear in no term, so F does not depend on them. Rows that differ only in C and/or E always have the same F. For example, m0, 1, 4, 5 are all 1 and m2, 3, 6, 7 are all 0. F is really a function of
+**C and E are redundant.** They appear in no term, so F does not depend on them. Rows that differ only in C and/or E always have the same F. For example, m0, 1, 4, 5 are all 1 and m2, 3, 6, 7 are all 0. F is really a function of A, B and D only.
+
+**A, B and D are all needed.** Each one changes F for some input:
+
+- **A:** m10 (01010) gives 0 and m26 (11010) gives 1. Only A differs.
+- **B:** m16 (10000) gives 1 and m24 (11000) gives 0. Only B differs.
+- **D:** m16 (10000) gives 1 and m18 (10010) gives 0. Only D differs.
+
+Over (A, B, D) with A as the most significant bit, F = 1 for ABD = 000, 100 and 111. So F(A,B,D) = Σm(0, 4, 7), which cannot be reduced further.
