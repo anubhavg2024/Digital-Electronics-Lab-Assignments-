@@ -6,8 +6,8 @@ and verify the simplified circuit in a simulator.
 F(A,B,C,D,E) = Σm(0,1,4,5,16,17,20,21,26,27,30,31)
 
 ## Files
-- `circuit/` – Contains the circuit image or design, discussion, verification details, and truth table, as applicable to the assignment.
-- `prompts/` – Contains the GenAI prompt and response log, including the prompts used, AI-generated responses, and verification or review of the results.
+- `circuit/` – Circuit design and images, truth table, verification and discussion
+- `prompts/` – GenAI prompts and responses
 
 ## K-map (rows = BC, columns = DE, both in Gray-code order)
 A = 0
