@@ -1,22 +1,31 @@
 # Block 2: Mod-N counter (Mod-60)
 
+# Block 2: Mod-N counter (Mod-60)
+
 ## Real system
-The seconds counter of a digital clock. The same idea is used as a frequency
-divider (a Mod-N counter divides its input frequency by N) and as a timer in
-a traffic-light controller.
+The seconds counter of a digital clock. The same idea divides a clock frequency
+by N, and times intervals in a traffic-light controller.
 
 ## Role of the block
-The counter counts 0 to 59 and wraps to 0. At count 59 it raises a carry
-signal that enables the minutes counter, which in turn enables the hours
-counter. In the clock, a 1 Hz input gives one wrap per minute, so the carry
-output is a 1/60 Hz signal. It can be built as one 6-bit counter with a
-maximum of 59, or as a Mod-10 units counter and a Mod-6 tens counter. The
-tens counter is enabled only when units = 9, so the display reads 00 to 59
-directly in decimal digits.
+The counter counts 0 to 59 and wraps to 0. At 59 it raises a carry that enables
+the minutes counter, which in turn enables the hours counter. With a 1 Hz input
+the carry output is a 1/60 Hz signal. It can be built as one 6-bit counter with
+maximum 59, or as a Mod-10 units counter and a Mod-6 tens counter, with the
+tens counter enabled only when units = 9.
 
 ## Simulation result
-mod60_counter.circ and a6_mod60.v: the count goes ... 58, 59, 0, 1 ...
-with carry = 1 only at 59. The 6-bit version and the Mod-10 + Mod-6 version
-agree on all 125 ticks tested. Testbench result: PASS.
+The sample simulation showed the expected Mod-60 counting sequence.
 
-Figure: circuit/mod60_wrap_59_to_0.png
+| Clock event | Counter value | Carry output |
+|---|---:|---|
+| Initial state | 58 | 0 |
+| First clock pulse | 59 | 0 |
+| Second clock pulse | 0 | 1 |
+| Third clock pulse | 1 | 0 |
+
+The counter advanced from 58 to 59 and then returned to 0 on the next clock
+pulse. The carry output was asserted at the terminal count of 59 to indicate
+the rollover and enable the next counter stage.
+
+This demonstrates the expected counting and rollover behaviour of a Mod-60
+counter.
