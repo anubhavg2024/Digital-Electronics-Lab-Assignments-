@@ -10,4 +10,4 @@ In the faulty circuit configuration, input [/B/] was left unconnected from the p
 * The AI successfully isolated the missing connection on input [/B/] and mapped out the exact structural corrections needed at the gate level.
 
 ## 3. Conclusion
-Assignment A4 demonstrates the practical utility of AI-assisted debugging in digital hardware design, showing how behavioral anomalies in truth tables can be efficiently traced back to physical netlist errors (CO1, CO2).
+Assignment A4 demonstrates the practical utility of AI-assisted debugging in digital hardware design, showing how behavioral anomalies in truth tables can be efficiently traced back to physical netlist errors. 
