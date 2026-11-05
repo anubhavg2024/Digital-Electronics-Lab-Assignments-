@@ -17,7 +17,7 @@ At 23:59:59, all three counters wrap to 00:00:00 on the next clock edge.
 - `prompts/` – Contains the GenAI prompt and response log, including the prompts used, AI-generated responses, and verification or review of the results.
   
 ## Result
-Counting, carries and the 23:59:59 to 00:00:00 rollover were checked at preset points
+Seconds, minutes and hours count and roll over correctly.
 
 ## GenAI use
 **Tool:** Claude Sonnet 5.5 (Anthropic)
