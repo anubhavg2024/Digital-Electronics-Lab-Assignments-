@@ -6,6 +6,11 @@
 - Outputs: Green, Yellow, Red, Walk
 - Stays Green until P = 1, then Yellow -> Walk (cars see Red) -> Red -> Green
 
+
+## Files
+- `circuit/` – Circuit design and images, truth table, verification and discussion
+- `prompts/` – GenAI prompts and responses
+
 ## State diagram
 ```mermaid
 stateDiagram-v2
@@ -42,10 +47,6 @@ stateDiagram-v2
 Check: G (00): D0 = P. Y (01): D0 = 1. W (11) and R (10): D0 = 0. D1 = Q0
 gives 00->0, 01->1, 11->1, 10->0. Both columns match the table.
 
-## Files
-- `circuit/` – Contains the circuit image or design, discussion, verification details, and truth table, as applicable to the assignment.
-- `prompts/` – Contains the GenAI prompt and response log, including the prompts used, AI-generated responses, and verification or review of the results.
-
 ## Result
 The FSM design defines the sequence Green -> Yellow -> Walk -> Red -> Green following a pedestrian request. The state transitions, output conditions, and logic equations are consistent with the specified traffic light behavior.
 
@@ -58,18 +59,9 @@ The FSM design defines the sequence Green -> Yellow -> Walk -> Red -> Green foll
 - Each state represents one clock cycle. A practical controller would use a timing mechanism to hold each state for the required duration.
 
 ## GenAI Usage
+**Tool:** Claude Sonnet 5.5 (Anthropic)
 
-**GenAI Tool Used:** Claude Sonnet 5.5, a large language model developed by Anthropic, accessed through the Claude.ai chat interface.
-
-Generative AI was used to assist with:
-
-- Understanding and interpreting the assignment requirements.
-- Developing the logical or circuit design approach.
-- Deriving Boolean expressions and related logic.
-- Preparing truth tables and design documentation.
-- Identifying appropriate logic gates and components.
-- Explaining circuit operation, verification, and edge cases.
-- Reviewing the design for logical consistency.
-
-The AI-generated suggestions and outputs were reviewed and checked against the assignment requirements. Final design decisions and verification were based on the expected circuit behavior.
+- Used for understanding the requirements, design approach and documentation
+- Used to review the design and identify edge cases
+- Suggestions were checked against the requirements and tested in Logisim
 
