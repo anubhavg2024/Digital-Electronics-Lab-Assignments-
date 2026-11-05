@@ -1,20 +1,24 @@
 # Block 1: D flip-flop (1-bit memory cell)
 
 ## Real system
-A CPU register. A 32-bit register is 32 D flip-flops sharing one clock and
-one write-enable line. A second example is a keypad debounce circuit.
+A CPU register. A 32-bit register is 32 D flip-flops sharing one clock and one
+write-enable line. A second example is a keypad debounce circuit.
 
 ## Role of the block
-On each active clock edge the flip-flop copies D to Q and then holds Q until
-the next edge. When write-enable is 0 it keeps its old value. This is how a
-register keeps an operand stable while the ALU works on it. In a debounce
-circuit, flip-flops sample the noisy key signal at a fixed clock rate, so the
-output changes only at clock edges and not on every contact bounce; a short
-counter then confirms the level is stable before it is accepted.
+On each active clock edge the flip-flop copies D to Q and holds it until the
+next edge. With write-enable at 0 it keeps its old value, so a register can
+hold an operand steady while the ALU uses it. In a debounce circuit, flip-flops
+sample the noisy key signal at a fixed rate, so the output changes only at
+clock edges and contact bounce between edges is ignored.
 
 ## Simulation result
-dff.circ and a6_dff.v: writing 1 with enable = 1 stores 1; setting enable = 0
-and changing D to 0 leaves Q at 1 (hold); writing 0 with enable = 1 clears it.
-Testbench result: PASS.
+The sample simulation demonstrated the expected behaviour of the D flip-flop
+with an enable input.
 
-Figure: circuit/dff.png
+- With enable = 1 and D = 1, the output Q changed to 1 after the clock edge.
+- With enable = 0 and D = 0, the output remained at 1, showing that the
+  flip-flop retained its previous value.
+- When enable = 1 and D = 0, the output Q changed to 0 after the next clock edge.
+
+This demonstrates that the flip-flop stores the input when enabled and holds
+its previous state when the enable signal is low.
