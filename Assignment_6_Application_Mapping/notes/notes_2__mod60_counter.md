@@ -1,7 +1,5 @@
 # Block 2: Mod-N counter (Mod-60)
 
-# Block 2: Mod-N counter (Mod-60)
-
 ## Real system
 The seconds counter of a digital clock. The same idea divides a clock frequency
 by N, and times intervals in a traffic-light controller.
