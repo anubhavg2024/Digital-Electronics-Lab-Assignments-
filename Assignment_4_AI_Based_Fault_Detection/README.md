@@ -40,9 +40,8 @@ In the faulty implementation, the first XOR gate has input 'B' left unconnected 
 ---
 
 ## Files
-
-* `circuit/` – Contains the circuit image or design, discussion, verification details, and truth table, as applicable to the assignment.
-* `prompts/` – Contains the GenAI prompt and response log, including the prompts used, AI-generated responses, and verification or review of the results.
+- `circuit/` – Circuit design and images, truth table, verification and discussion
+- `prompts/` – GenAI prompts and responses
 
 ---
 
@@ -59,15 +58,10 @@ The corrected circuit matches the golden full adder truth table across all 8 inp
 ---
 
 ## GenAI Usage
-**GenAI Tool Used:** Claude Sonnet 5.5, a large language model developed by Anthropic, accessed through the Claude.ai chat interface.
+**Tool:** Claude Sonnet 5.5 (Anthropic)
 
-Generative AI was used to assist with:
-* Understanding and interpreting the assignment requirements.
-* Developing the logical or circuit design approach.
-* Deriving Boolean expressions and related logic.
-* Preparing truth tables and design documentation.
-* Identifying appropriate logic gates and components.
-* Explaining circuit operation, verification, and edge cases.
-* Reviewing the design for logical consistency.
+- Used for understanding the requirements, design approach and documentation
+- Used to review the design and identify edge cases
+- Suggestions were checked against the requirements and tested in Logisim.
 
 *Note: The AI-generated suggestions and outputs were reviewed and checked against the assignment requirements. Final design decisions and verification were based on the expected circuit behavior.*
