@@ -4,31 +4,28 @@ register), identify a real system that uses it, describe its role, and show
 a small simulation.
 
 ## Summary
-| Block | Real system | Role | Simulation |
-|---|---|---|---|
-| D flip-flop | CPU register bit, keypad debounce | Stores 1 bit between clock edges | `a6_dff.v`, `circuit/dff.circ` |
-| Mod-60 counter | Seconds counter of a digital clock; frequency divider | Counts 0-59, carry enables minutes | `a6_mod60.v`, `circuit/mod60_counter.circ` |
-| Shift register | UART/SPI serial link; 74HC595 LED driver | Parallel-to-serial and serial-to-parallel conversion | `a6_shift_register.v`, `circuit/shift_register.circ` |
+| Block | Real system | Role |
+|---|---|---|
+| D flip-flop | CPU register bit, keypad debounce | Stores one bit between clock edges |
+| Mod-60 counter | Seconds counter of a digital clock | Counts 0-59, carry at 59 |
+| Shift register | UART/SPI serial link | Parallel-to-serial and serial-to-parallel conversion |
 
 ## Files
-- `a6_dff.v`, `a6_mod60.v`, `a6_shift_register.v` - Verilog with testbenches
 - `notes/` - one-page justification note per block
-- `circuit/` - Logisim circuits and screenshots
-- `output.txt` - combined testbench output
-- `prompts/prompts.md` - GenAI prompts and responses
-
-## How to run
-    iverilog -g2012 -o sim_dff a6_dff.v
-    vvp sim_dff
-(repeat for a6_mod60.v and a6_shift_register.v)
+- `circuit/` – Circuit design and images, truth table, verification and discussion
+- `prompts/` – GenAI prompts and responses
 
 ## Result
 All three testbenches report PASS.
 
 ## Observations / edge cases
-- The flip-flop holds its value when enable = 0 even if D changes.
-- The counter wraps 59 -> 0 and carry is high only at 59.
-- Mod-60 built from Mod-10 + Mod-6 matches the single 6-bit counter.
-- The first bit shifted into the SIPO register at load time is shifted out
-  again by the 8th clock, so exactly 8 clocks are needed after the load.
-- Values 60 to 63 are unused in the 6-bit counter.
+- The flip-flop must keep its value while enable is 0.
+- The counter wraps from 59 to 0 and carries only at 59.
+- The shift register needs exactly 8 clocks after loading to hold the full byte.
+
+## GenAI use
+**Tool:** Claude Sonnet 5.5 (Anthropic)
+
+- Used for understanding the requirements, design approach and documentation
+- Used to review the design and identify edge cases
+- Suggestions were checked against the requirements and tested in Logisim
