@@ -9,7 +9,7 @@
 | 23:59:58 | 2 | 00:00:00 | 00:00:00 | Yes |
 | any | reset | 00:00:00 | 00:00:00 | Yes |
 
-Figures: rollover_23_59_59.png, rollover_00_00_00.png
+Figures: simulation_1.png, simulation_2.png
 
 ## Verdict
 All three counters wrapped on the same edge cleanly without race conditions or glitching states.
