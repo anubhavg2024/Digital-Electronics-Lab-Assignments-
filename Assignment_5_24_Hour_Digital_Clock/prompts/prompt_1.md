@@ -6,66 +6,62 @@ Derive the FSM and flip-flop-based design for a 24-hour digital clock with secon
 
 ---
 
-## Response
+### 1. FSM view
 
-### FSM view
+The clock is a Moore machine with no data input. Its state is the time itself:
 
-The clock is a Moore machine with no data input, and its state is the time itself:
-
-- State = (hours, minutes, seconds), where hours are 0–23 and minutes and seconds are 0–59.
+- State = (hours, minutes, seconds), with hours 0–23 and minutes and seconds 0–59.
 - Number of states = 24 × 60 × 60 = **86,400**.
-- Outputs = the stored counter values (a Moore machine whose outputs are decoded from the state).
-- Every tick (1 Hz) moves to the next state. After 23:59:59 it wraps to 00:00:00, so the state graph is a single 86,400-state cycle.
+- Outputs are the stored counter values, so they depend only on the state.
+- Each 1 Hz tick moves to the next state. After 23:59:59 it wraps to 00:00:00, so the state graph is one 86,400-state cycle.
 
-Listing 86,400 states is impractical, so the machine is decomposed into three cascaded modulo counters.
+Drawing 86,400 states is impractical, so the machine is split into three cascaded modulo counters: seconds (mod-60), minutes (mod-60) and hours (mod-24).
 
-### Flip-flops per counter
+### 2. Flip-flops per counter
 
-| Counter | Modulus | Range | Binary FFs        | BCD FFs (for 7-segment) |
-|---------|---------|-------|-------------------|-------------------------|
-| Seconds | 60      | 0–59  | 6 (2⁶ = 64 ≥ 60) | 7 (3 + 4)               |
-| Minutes | 60      | 0–59  | 6                 | 7 (3 + 4)               |
-| Hours   | 24      | 0–23  | 5 (2⁵ = 32 ≥ 24)  | 6 (2 + 4)               |
-| **Total** | 86,400 |      | **17**            | **20**                  |
+| Counter   | Modulus | Range | Binary FFs        | BCD FFs (for 7-segment) |
+|-----------|---------|-------|-------------------|-------------------------|
+| Seconds   | 60      | 0–59  | 6 (2⁶ = 64 ≥ 60)  | 7 (units 4 + tens 3)    |
+| Minutes   | 60      | 0–59  | 6                 | 7 (units 4 + tens 3)    |
+| Hours     | 24      | 0–23  | 5 (2⁵ = 32 ≥ 24) | 6 (units 4 + tens 2)    |
+| **Total** | 86,400  |       | **17**            | **20**                  |
 
-17 is also the theoretical minimum, since 2¹⁶ = 65,536 < 86,400 ≤ 2¹⁷ = 131,072. The binary design uses D flip-flops with synchronous clear. The BCD version is easier to display but costs 3 more flip-flops.
+17 is the theoretical minimum, since 2¹⁶ = 65,536 < 86,400 ≤ 2¹⁷ = 131,072. The BCD version costs 3 more flip-flops but maps directly to 7-segment digits.
 
-### State transitions
+### 3. State transitions
 
-**Seconds (s):**
+**Seconds (s):** it advances on every 1 Hz tick.
 
 - s → s + 1 for s = 0 … 58
-- 59 → 0 (and generates a carry)
+- 59 → 0, and a carry is generated
 
-**Minutes (m),** only when the seconds carry fires:
+**Minutes (m):** it advances only when the seconds carry fires.
 
 - m → m + 1 for m = 0 … 58
-- 59 → 0 (and generates a carry)
+- 59 → 0, and a carry is generated
 
-**Hours (h),** only when the minutes carry fires:
+**Hours (h):** it advances only when the minutes carry fires.
 
 - h → h + 1 for h = 0 … 22
 - 23 → 0
 
 Example full-clock transitions:
 
-| Present  | Next     |
-|----------|----------|
-| 05:23:41 | 05:23:42 |
-| 05:23:59 | 05:24:00 |
-| 12:59:59 | 13:00:00 |
-| 23:59:59 | 00:00:00 |
+| Present (hh:mm:ss) | Next     |
+|--------------------|----------|
+| 05:23:41           | 05:23:42 |
+| 05:23:59           | 05:24:00 |
+| 12:59:59           | 13:00:00 |
+| 23:59:59           | 00:00:00 |
 
 ### 4. Terminal-count detection
 
-Binary encodings of the last values:
+| Value | Binary | Decode (unreachable values as don't-cares) |
+|-------|--------|---------------------------------------------|
+| 59    | 111011 | s5·s4·s3·s1·s0                              |
+| 23    | 10111  | h4·h2·h1·h0                                 |
 
-| Value | Binary | Full decode          | Simplified decode (unreachable values as don't-cares) |
-|-------|--------|----------------------|--------------------------------------------------------|
-| 59    | 111011 | s5·s4·s3·s2′·s1·s0   | s5·s4·s3·s1·s0 |
-| 23    | 10111  | h4·h3′·h2·h1·h0      | h4·h2·h1·h0    |
-
-The simplification works because the counters never reach 60–63 or 24–31, so no other reachable value matches these shorter products. The full decode costs one more input per gate. It is the `>=` comparison in the Verilog (section 7) that forces out-of-range values to wrap, as discussed in section 8.
+These shortened decodes work because the counters never reach 60–63 or 24–31. The signals are:
 
 ```
 sec_tc = (sec == 59)
@@ -73,24 +69,37 @@ min_tc = (min == 59)
 hr_tc  = (hr  == 23)
 ```
 
-### Carry/enable logic
+### 5. Carry/enable logic
 
-The architecture is fully synchronous, sharing a single master clock across all flip-flops. Carries function as enable lines rather than secondary clocks:
+All flip-flops share the same clock (fully synchronous), and the carries act as enables, not as clocks:
 
-[sec_en = tick]
+```
+sec_en = tick              (the 1 Hz pulse)
+min_en = sec_en · sec_tc
+hr_en  = min_en · min_tc
+```
 
-[min_en = sec_en . sec_tc]
+Per-counter behavior, with `en` the counter's enable and `tc` its terminal-count signal:
 
-[hr_en = min_en . min_tc]
+- `en = 0`: the counter holds its value.
+- `en = 1` and `tc = 0`: the counter increments.
+- `en = 1` and `tc = 1`: the counter clears to 0 (wrap).
 
-Higher-order counters remain in a hold state unless their respective enable conditions evaluate to true.
+With D flip-flops, the D inputs are the next-state value of this rule. The synchronous reset sits above it with the highest priority.
 
-### Reset condition
+If your board supplies a true 1 Hz clock, `sec_en` is simply tied to 1. If it supplies a fast clock, a divider produces a one-clock-wide 1 Hz tick that is used as `sec_en`. The tick-enable approach is usually preferred because it avoids derived clocks and timing problems.
 
-A synchronous reset signal forces all counter flip-flops to zero, immediately initializing the time to 00:00:00. Natural rollover occurs when 23:59:59 transitions on the next clock edge, simultaneously clearing all counters back to zero.
+### 6. Reset condition
 
-### Design notes
+- **Power-on or manual reset:** `rst = 1` forces all 17 flip-flops to 0, which is 00:00:00. It is synchronous and overrides everything else.
+- **Natural wrap (no extra reset needed):** the counters clear themselves on the tick when
+  - seconds: s = 59
+  - minutes: m = 59 and s = 59
+  - hours: h = 23, m = 59 and s = 59
 
-- Synchronous Execution: Utilizing an enable-chain approach instead of a ripple architecture avoids propagation delays and eliminates transient display glitches.
+So 23:59:59 followed by a tick clears all three counters on the same edge.
 
-- Robust Range Handling: Terminal count detection ensures correct wrap-around behavior across all active states.
+### 7. Design notes
+
+- **Synchronous, not ripple:** with a ripple design, each counter clocks the next, so minute and hour changes would appear a few nanoseconds late and decoded displays could glitch. The enable chain avoids this, since every enable is computed from the old values before the edge.
+- **Illegal states:** values such as sec = 60–63 or hr = 24–31 can only occur from a power-up or noise upset. Using a "greater than or equal to" comparison for the terminal count sends them back into range on the next carry. The shortened `==` decode still recovers, but only after a few extra ticks.
