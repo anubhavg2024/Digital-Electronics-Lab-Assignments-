@@ -6,48 +6,60 @@ Explain exactly what happens on the clock edge when the time goes from 23:59:59 
 
 ---
 
-## Response
+### Before the edge (everything settled)
 
-### Before the edge (all values settled)
+The registers hold:
 
-The registers hold hr = 23 (10111), min = 59 (111011), sec = 59 (111011), and tick = 1 for this clock cycle. Based on the system logic:
+| Counter | Value | Binary |
+|---------|-------|--------|
+| Hours   | 23    | 10111  |
+| Minutes | 59    | 111011 |
+| Seconds | 59    | 111011 |
 
-| Signal | Value | Why                         |
-|--------|-------|-----------------------------|
-| sec_tc | 1     | sec = 59                    |
-| min_tc | 1     | min = 59                    |
-| hr_tc  | 1     | hr = 23                     |
-| sec_en | 1     | = tick                      |
-| min_en | 1     | = sec_en · sec_tc = 1·1     |
-| hr_en  | 1     | = min_en · min_tc = 1·1     |
-| rst    | 0     | normal operation            |
+The combinational logic has already settled on these values:
 
-All three enables are 1 at the same time, because the carry chain is combinational and has finished settling before the edge arrives.
+| Signal | Value | Why                        |
+|--------|-------|----------------------------|
+| sec_tc | 1     | seconds = 59               |
+| min_tc | 1     | minutes = 59               |
+| hr_tc  | 1     | hours = 23                 |
+| sec_en | 1     | the 1 Hz tick is active    |
+| min_en | 1     | sec_en · sec_tc = 1 · 1    |
+| hr_en  | 1     | min_en · min_tc = 1 · 1    |
+| rst    | 0     | normal operation           |
 
-### At the edge (posedge clk)
+All three enables are 1 at the same moment. The carry chain is combinational, so it finished settling before the edge arrived. It is computed only from the old register values.
 
-Every flip-flop samples its D input at the same instant. What each D input is:
+### At the edge
 
-- **Seconds:** sec_en = 1 and sec_tc = 1, so the next value is 0. D = 000000.
-- **Minutes:** min_en = 1 and min_tc = 1, so the next value is 0. D = 000000.
-- **Hours:** hr_en = 1 and hr_tc = 1, so the next value is 0. D = 00000.
+Every flip-flop samples its D input at the same instant. Each counter sees its enable and its terminal count both at 1, which means "wrap to zero":
 
-All 17 flip-flops capture 0 together. The new state is **00:00:00**.
+- **Seconds:** D = 000000
+- **Minutes:** D = 000000
+- **Hours:** D = 00000
 
-### Why it works
+All 17 flip-flops capture 0 together, and the new state is **00:00:00**. The reset has no part in this, since `rst` is 0 and the clear comes from the counters' own wrap rule.
 
-- **No ripple.** Minutes and hours do not wait for seconds to change first. Their enables were already computed from the old values (59, 59), so all three counters wrap on the same edge.
-- **Old values drive the decision.** Every D input is computed from the pre-edge register contents. In Verilog the non-blocking `<=` assignments guarantee this: all right-hand sides are evaluated first, then all registers update.
-- **Brief transient after the edge.** The flip-flops do not all change at exactly the same nanosecond, because clock-to-Q delays differ slightly. For a short time the outputs may show a mix of old and new bits. The next edge samples only after this has settled, so the counter itself is unaffected. A display decoded directly from these bits could flicker briefly, which is why displays are usually driven from registered or latched outputs.
-- **After the edge.** sec_tc, min_tc and hr_tc all fall to 0 because the registers now read 0, so min_en and hr_en drop. sec_en = tick also drops, because tick is a one-clock-wide pulse. Nothing changes until the next tick, and the clock then counts 00:00:00 → 00:00:01.
+### Why all three change at once
+
+- **No ripple.** Minutes and hours don't wait for seconds to change first. Their enables were already computed from the old values (59 and 59), so all three counters wrap on the same edge.
+- **Next state depends only on the old state.** Every D input is a function of the pre-edge register contents. A flip-flop captures its input at the edge and its output changes only after that, so no flip-flop sees another one's new value in the same cycle.
+
+### Just after the edge
+
+- **Brief transient.** Clock-to-output delays differ slightly between flip-flops, so for a few nanoseconds the outputs can show a mix of old and new bits. The next edge samples only after this has settled, so the counters are unaffected. A display decoded directly from these bits could flicker, which is why displays are usually fed from registered or latched outputs.
+- **Enables fall.** Once the counters read 00:00:00, `sec_tc`, `min_tc` and `hr_tc` all drop to 0, so `min_en` and `hr_en` go to 0. With a one-clock-wide tick, `sec_en` (= `tick`) also drops, because the pulse has ended. With a true 1 Hz clock, `sec_en` is tied to 1 and stays high. Nothing more changes until the next tick.
+- **Next tick.** Only the seconds counter is enabled, and the time becomes 00:00:01.
 
 ### Timeline
 
-| Moment                                  | hr:min:sec | sec_en / min_en / hr_en |
-|-----------------------------------------|------------|-------------------------|
-| Just before edge                        | 23:59:59   | 1 / 1 / 1               |
-| Just after edge, settled                | 00:00:00   | 0 / 0 / 0 (until next tick) |
-| Cycle before the next tick edge         | 00:00:00   | 1 / 0 / 0               |
-| Just after the next tick edge, settled  | 00:00:01   | 0 / 0 / 0               |
+| Moment                                   | hh:mm:ss | sec_en / min_en / hr_en |
+|------------------------------------------|----------|-------------------------|
+| Just before the edge                     | 23:59:59 | 1 / 1 / 1               |
+| Just after the edge, settled             | 00:00:00 | 0 / 0 / 0 (until next tick) |
+| Cycle before the next tick edge          | 00:00:00 | 1 / 0 / 0               |
+| Just after the next tick edge, settled   | 00:00:01 | 0 / 0 / 0               |
 
-One detail: tick is a one-clock-wide pulse from the fast system clock, so the enables are high for only one fast-clock cycle per second. On every other fast-clock edge nothing changes, and the time holds at 23:59:59 until that tick arrives.
+### Fast clock vs. true 1 Hz clock
+
+If the design uses a fast system clock with a one-clock-wide 1 Hz tick, the clock holds 23:59:59 across all the fast-clock edges where `tick = 0`, and the wrap happens only on the edge where `tick = 1`. With a true 1 Hz clock, `sec_en` is tied to 1 and the wrap happens on the first clock edge after the clock has displayed 23:59:59.
