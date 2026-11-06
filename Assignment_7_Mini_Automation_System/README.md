@@ -7,49 +7,48 @@ and test every input scenario, including edge cases.
 An automatic parking barrier. It opens for a car with a valid ticket, stays
 open while a vehicle is under it, then closes.
 
-## Inputs / outputs / constraints
-| Signal | Type | Meaning |
-|---|---|---|
-| C | input | car at entry sensor |
-| T | input | ticket valid |
-| X | input | vehicle under barrier (safety loop) |
-| Up | output | barrier up (green light) |
-| MotorClose | output | motor driving the barrier down |
-| Red | output | red light (= NOT Up) |
-
-Constraint: the barrier must never close while X = 1.
-
-## Design
-States (2 D flip-flops): CLOSED = 00, OPEN = 01, CLOSING = 10.
-State 11 is unused and returns to CLOSED.
-
-    D1 = Q1'.Q0.X'
-    D0 = Q1'.Q0'.C.T + X.(Q1 xor Q0)
-    Up = Q1'.Q0    MotorClose = Q1.Q0'    Red = NOT Up
-
-Full table: `state_table.md`. Test results: `test_cases.md`.
-
 ## Files
-- `a7_barrier.v` - design, testbench and reference model
-- `state_table.md`, `test_cases.md`
-- `circuit/parking_barrier.circ` - Logisim circuit, plus screenshots
-- `output.txt` - simulation log
-- `prompts/prompts.md` - GenAI use (state table)
+- `circuit/` – Circuit design and images, truth table, verification and discussion
+- `prompts/` – GenAI prompts and responses
 
-## How to run
-    iverilog -g2012 -o sim a7_barrier.v
-    vvp sim
+## Components Used
+
+The Parking Barrier Controller FSM is implemented using the following Logisim components:
+
+| Component | Quantity / Configuration | Purpose |
+|---|---|---|
+| D Flip-Flop | 2 (1-bit each) | Store the FSM state bits Q1 and Q0. |
+| AND Gates | Multiple | Implement product terms in the next-state and output logic. |
+| OR Gates | Multiple | Combine logic terms to generate next-state and output signals. |
+| NOT Gates | As required / input bubbles | Provide complemented input signals. |
+| Clock | 1 | Synchronise state transitions. |
+| Input Pins | R1 and R0 | Provide the external input signals shown in the circuit. |
+| Input Pin | Reset | Initialise the state storage, if connected to the flip-flop reset pins. |
+| Output Pins / Indicators | NOGO, UP, DOWN | Display the controller output signals. |
+| Connecting Wires | As required | Connect sequential and combinational logic components. |
+
+## Circuit Description
+
+The circuit uses two D flip-flops to store the FSM state. Combinational logic constructed using AND, OR and inverted inputs generates the next-state signals.
+
+The output logic combines the state signals and input conditions to generate NOGO, UP and DOWN.
+
+A clock signal synchronises the state updates.
+
+
+## Safety Requirement
+The barrier must not close while a vehicle is detected beneath it. The input X is used in the next-state logic to prevent unsafe closing and to return the controller to an open condition when necessary.
 
 ## Result
 Testbench output matches the reference model for the 8 scenarios and for
 64 further input patterns. The unused state 11 recovers to CLOSED.
 
-## Observations / edge cases
-- Car with an invalid ticket: stays CLOSED.
-- Vehicle under the barrier while OPEN: stays OPEN.
-- Vehicle appears while CLOSING: reopens.
-- Unused state 11: goes to CLOSED on the next clock edge.
-- Power-on state is forced to CLOSED by reset.
-- Not handled: a car and a valid ticket together with X = 1 while OPEN
-  (the controller ignores them until the barrier closes and reopens).
+## Conclusion
+The parking barrier controller demonstrates the application of a finite state machine to an automated safety-related system. The design combines state memory and combinational logic to control barrier operation based on vehicle and ticket inputs.
 
+## GenAI use
+**Tool:** Claude Sonnet 5.5 (Anthropic)
+
+- Used for understanding the requirements, design approach and documentation
+- Used to review the design and identify edge cases
+- Suggestions were checked against the requirements and tested in Logisim
