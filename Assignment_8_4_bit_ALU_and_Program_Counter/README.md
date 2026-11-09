@@ -18,7 +18,7 @@
 ## Files
 - `circuit/` – Circuit design and images, truth table, verification and discussion
 - `mapping/` - code-to-hardware write-up and diagram
-- `prompts/` – GenAI prompts and responses
+- `prompt/` – GenAI prompts and responses
 
 ## GenAI use
 **Tool:** Claude Sonnet 5.5 (Anthropic)
